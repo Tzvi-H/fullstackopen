@@ -1,19 +1,8 @@
-const Hello = props => {
-  console.log(props)
+const App = (props) => {
+  const {counter} = props
   return (
-    <div>
-      <p>Hello {props.name}</p>
-    </div>
+    <div>{counter}</div>
   )
 }
 
-const App = () => {
-  return (
-    <div>
-      <h1>Greetings</h1>
-      <Hello name='tzvi'/>
-    </div>
-  )
-}
-
-export default App;
+export default App

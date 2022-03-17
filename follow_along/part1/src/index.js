@@ -1,8 +1,17 @@
-import ReactDOM from 'react-dom';
-import App from './App';
+import ReactDOM from 'react-dom'
+import App from './App'
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+let counter = 1
 
+function refresh() {
+  ReactDOM.render(
+    <App counter={counter} />, 
+    document.getElementById('root')
+  )
+}
+
+refresh()
+setInterval(() => {
+  counter += 1;
+  refresh()
+}, 1000);
