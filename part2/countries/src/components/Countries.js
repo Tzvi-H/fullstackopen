@@ -1,7 +1,7 @@
 import CountryFull from './CountryFull';
 import CountryBasic from './CountryBasic';
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, setCountryFilter }) => {
   if (countries.length > 10) {
     return (
       <p>Too many countries, specify another filter</p>
@@ -15,7 +15,7 @@ const Countries = ({ countries }) => {
       <div>
         {
           countries.map(country => (
-            <CountryBasic key={country.name.common} country={country} />
+            <CountryBasic key={country.name.common} country={country} setCountryFilter={setCountryFilter} />
           ))
         }
       </div>
