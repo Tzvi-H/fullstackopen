@@ -6,6 +6,8 @@ import Persons from './components/Persons';
 import NotificationError from './components/NotificationError';
 import NotificationSuccess from './components/NotificationSuccess';
 
+let timeout;
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newPerson, setNewPerson] = useState('')
@@ -36,25 +38,36 @@ const App = () => {
     setFilter(event.target.value);
   }
 
+  const updatePerson = person => {
+    if (!window.confirm(`${person.name} is already added to the phonebook, replace the old number with a new one?`)) return;
+      
+    const newPersonObject = {...person, number: newNumber};
+
+    personService
+      .updatePerson(newPersonObject.id, newPersonObject)
+      .then(returnedPerson => {
+        setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
+        setNewPerson('');
+        setNewNumber('');
+        clearTimeout(timeout);
+        setSuccessMessage(`Update number for ${returnedPerson.name}`);
+        timeout = setTimeout(() => setSuccessMessage(null), 3000);
+      })
+      .catch(error => {
+        clearTimeout(timeout)
+        setErrorMessage(`Information of ${newPersonObject.name} has already been removed from the server`);
+        timeout = setTimeout(() => setErrorMessage(null), 3000);
+        setPersons(persons.filter(p => p.id !== person.id));
+      })
+  }
+
   const addPerson = event => {
     event.preventDefault();
 
     const existingPerson = persons.find(person => person.name === newPerson);
     if (existingPerson) {
-      if (!window.confirm(`${newPerson} is already added to the phonebook, replace the old number with a new one?`)) return;
-      
-      const newPersonObject = {...existingPerson, number: newNumber};
-  
-      personService
-        .updatePerson(existingPerson.id, newPersonObject)
-        .then(returnedPerson => {
-          setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
-          setNewPerson('');
-          setNewNumber('');
-          setSuccessMessage(`Update number for ${returnedPerson.name}`);
-          setTimeout(() => setSuccessMessage(null), 3000);
-        })
-        return;
+      updatePerson(existingPerson);
+      return;
     }
 
     const newPersonObject = {
@@ -68,8 +81,9 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewPerson('');
         setNewNumber('');
+        clearTimeout(timeout);
         setSuccessMessage(`Added ${returnedPerson.name}`);
-        setTimeout(() => setSuccessMessage(null), 3000);
+        timeout = setTimeout(() => setSuccessMessage(null), 3000);
       })
   }
 
@@ -80,8 +94,9 @@ const App = () => {
       .deletePerson(id)
       .then(() => {
         setPersons(persons.filter(p => p.id !== id));
+        clearTimeout(timeout)
         setSuccessMessage(`Deleted ${name}`);
-        setTimeout(() => setSuccessMessage(null), 3000);
+        timeout = setTimeout(() => setSuccessMessage(null), 3000);
       })
   }
 
