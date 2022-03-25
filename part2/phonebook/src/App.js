@@ -1,20 +1,20 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
+import personService from './services/persons';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 
 const App = () => {
-  useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(({ data }) => setPersons(data));
-  }, []);
-
   const [persons, setPersons] = useState([]);
   const [newPerson, setNewPerson] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(data => setPersons(data));
+  }, []);
 
   const personsToShow = filter === ''
     ? persons
@@ -44,9 +44,14 @@ const App = () => {
       name: newPerson,
       number: newNumber,
     };
-    setPersons(persons.concat(newPersonObject))
-    setNewPerson('');
-    setNewNumber('');
+
+    personService
+      .create(newPersonObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewPerson('');
+        setNewNumber('');
+      })
   }
 
   return (
