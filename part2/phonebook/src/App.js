@@ -3,12 +3,16 @@ import personService from './services/persons';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import NotificationError from './components/NotificationError';
+import NotificationSuccess from './components/NotificationSuccess';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newPerson, setNewPerson] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     personService
@@ -47,6 +51,8 @@ const App = () => {
           setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
           setNewPerson('');
           setNewNumber('');
+          setSuccessMessage(`Update number for ${returnedPerson.name}`);
+          setTimeout(() => setSuccessMessage(null), 3000);
         })
         return;
     }
@@ -62,6 +68,8 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewPerson('');
         setNewNumber('');
+        setSuccessMessage(`Added ${returnedPerson.name}`);
+        setTimeout(() => setSuccessMessage(null), 3000);
       })
   }
 
@@ -70,12 +78,18 @@ const App = () => {
 
     personService
       .deletePerson(id)
-      .then(() => setPersons(persons.filter(p => p.id !== id)));
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== id));
+        setSuccessMessage(`Deleted ${name}`);
+        setTimeout(() => setSuccessMessage(null), 3000);
+      })
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <NotificationSuccess message={successMessage}/>
+      <NotificationError message={errorMessage}/>
 
       <Filter handleFilterChange={handleFilterChange}/>
 
