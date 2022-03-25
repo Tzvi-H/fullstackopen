@@ -35,10 +35,20 @@ const App = () => {
   const addPerson = event => {
     event.preventDefault();
 
-    if (persons.some(person => person.name === newPerson)) {
-      const userReponse = window.confirm(`${newPerson} is already added to the phonebook, replace the old number with a new one?`);
-      console.log(userReponse);
-      return;
+    const existingPerson = persons.find(person => person.name === newPerson);
+    if (existingPerson) {
+      if (!window.confirm(`${newPerson} is already added to the phonebook, replace the old number with a new one?`)) return;
+      
+      const newPersonObject = {...existingPerson, number: newNumber};
+  
+      personService
+        .updatePerson(existingPerson.id, newPersonObject)
+        .then(returnedPerson => {
+          setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
+          setNewPerson('');
+          setNewNumber('');
+        })
+        return;
     }
 
     const newPersonObject = {

@@ -20,10 +20,17 @@ const deletePerson = id => {
           .then(response => response.data);
 }
 
+const updatePerson = (id, newPerson) => {
+  return axios
+          .put(`${url}/${id}`, newPerson)
+          .then(response => response.data);
+}
+
 const personService = {
   getAll,
   create,
-  deletePerson
+  deletePerson,
+  updatePerson
 }
 
 export default personService;
