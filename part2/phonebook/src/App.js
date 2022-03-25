@@ -36,7 +36,8 @@ const App = () => {
     event.preventDefault();
 
     if (persons.some(person => person.name === newPerson)) {
-      alert(`${newPerson} is already added to the phonebook`)
+      const userReponse = window.confirm(`${newPerson} is already added to the phonebook, replace the old number with a new one?`);
+      console.log(userReponse);
       return;
     }
 
@@ -54,7 +55,9 @@ const App = () => {
       })
   }
 
-  const deletePerson = id => {
+  const deletePerson = (id, name) => {
+    if  (!window.confirm(`Delete ${name} ?`)) return;
+
     personService
       .deletePerson(id)
       .then(() => setPersons(persons.filter(p => p.id !== id)));
