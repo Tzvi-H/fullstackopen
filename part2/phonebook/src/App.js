@@ -85,6 +85,11 @@ const App = () => {
         setSuccessMessage(`Added ${returnedPerson.name}`);
         timeout = setTimeout(() => setSuccessMessage(null), 3000);
       })
+      .catch(error => {
+        clearTimeout(timeout)
+        setErrorMessage(`Invalid info`);
+        timeout = setTimeout(() => setErrorMessage(null), 3000);
+      })
   }
 
   const deletePerson = (id, name) => {
