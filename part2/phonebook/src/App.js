@@ -55,9 +55,8 @@ const App = () => {
       })
       .catch(error => {
         clearTimeout(timeout)
-        setErrorMessage(`Information of ${newPersonObject.name} has already been removed from the server`);
+        setErrorMessage(error.response.data.error);
         timeout = setTimeout(() => setErrorMessage(null), 3000);
-        setPersons(persons.filter(p => p.id !== person.id));
       })
   }
 
@@ -87,7 +86,7 @@ const App = () => {
       })
       .catch(error => {
         clearTimeout(timeout)
-        setErrorMessage(`Invalid info`);
+        setErrorMessage(error.response.data.error);
         timeout = setTimeout(() => setErrorMessage(null), 3000);
       })
   }
