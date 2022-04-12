@@ -1,7 +1,7 @@
 import axios from 'axios'
 const baseUrl = '/api/notes'
 
-let token = null;
+let token = null
 
 const setToken = newtoken => {
   token = `bearer ${newtoken}`
@@ -24,21 +24,21 @@ const create = newObject => {
   }
 
   return axios
-          .post(baseUrl, newObject, config)
-          .then(response => response.data);
+    .post(baseUrl, newObject, config)
+    .then(response => response.data)
 }
 
 const update = (id, newObject) => {
   return axios
-          .put(`${baseUrl}/${id}`, newObject)
-          .then(response => response.data)
+    .put(`${baseUrl}/${id}`, newObject)
+    .then(response => response.data)
 }
 
-const noteService = { 
-  getAll, 
-  create, 
-  update, 
+const noteService = {
+  getAll,
+  create,
+  update,
   setToken
-};
+}
 
-export default noteService;
+export default noteService
