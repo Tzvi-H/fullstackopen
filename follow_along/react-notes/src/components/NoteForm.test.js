@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 test('<NoteForm /> updates parent state and calls onSubmit', () => {
   const createNote = jest.fn()
 
-  const { container } = render(<NoteForm createNote={createNote} />)
+  render(<NoteForm createNote={createNote} />)
 
   const input = screen.getByPlaceholderText('write here note content')
   const sendButton = screen.getByText('save')
